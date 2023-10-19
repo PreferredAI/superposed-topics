@@ -1,8 +1,8 @@
 '''
 Code modified from
 https://github.com/PreferredAI/topic-metrics/blob/main/topic_metrics/
-Apache 2.0
-Select choice functions
+MIT
+Selected choice functions
 '''
 import os
 import pickle
