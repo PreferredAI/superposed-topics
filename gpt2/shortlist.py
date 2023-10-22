@@ -1,5 +1,5 @@
 from algo.extract import MMEKC
-from algo.topics import load_joint_prob_graph, npmi, create_graph_with
+from algo.topics import get_topics
 from gpt2.bpe_encoder import get_encoder
 import pickle
 import pandas as pd
@@ -8,7 +8,6 @@ import os
 from functools import partial
 from multiprocessing import Pool
 from time import time
-from tqdm import tqdm
 
 
 def shortlist_decode(vocab2id, model_size, models_dir, extra_vocab=[]):
@@ -27,22 +26,12 @@ def shortlist_decode(vocab2id, model_size, models_dir, extra_vocab=[]):
     return shortlist_decoder
 
 
-def get_topics(indices, graph_dir, num_windows, min_freq, single_prob):
-    joint_prob = load_joint_prob_graph(graph_dir, num_windows, min_freq,
-                                       shortlist=indices)
-    g = create_graph_with(npmi, joint_prob, single_prob,
-                          smooth=True, shortlist=indices)
-    return g
-
-
 def multi_helper(inp, tau, dest_dir, thresholds, 
                  size_limits, shortlist_decoder, 
                  graph_dir, num_windows, min_freq, 
                  single_prob, time_limit_s, verbose):
 
     name, arg_matrix = inp
-    # neg = process_beta(arg_matrix[:tau], shortlist_decoder)
-    # pos = process_beta(arg_matrix[-tau:], shortlist_decoder)
 
     neg = {shortlist_decoder[k] for k in arg_matrix[:tau] 
            if k in shortlist_decoder}

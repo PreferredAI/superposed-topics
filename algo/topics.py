@@ -1,7 +1,7 @@
 '''
 Code modified from
 https://github.com/PreferredAI/topic-metrics/blob/main/topic_metrics/
-MIT
+MIT license
 Selected choice functions
 '''
 import os
@@ -12,6 +12,7 @@ from functools import partial, reduce
 from math import log
 
 EPS = EPSILON = 1e-12
+
 
 def npmi(p_a_b, p_a, p_b, smooth=True, default_to=0):
     """ Normalised Pointwise-mutual information (Bouma, 2009)
@@ -39,6 +40,7 @@ def npmi(p_a_b, p_a, p_b, smooth=True, default_to=0):
         return default_to
     return log(p_a_b / (p_a * p_b)) / -log(p_a_b)
 
+
 def create_prob_graph(graph, num_windows, min_freq):
     """ Create prob. graph from count graph fulfilling minimum freq. count
 
@@ -56,6 +58,7 @@ def create_prob_graph(graph, num_windows, min_freq):
     probability graph : Dict[int, float]   
     """
     return {k: v/num_windows if v >= min_freq else 0 for k, v in graph.items()}
+
 
 def aggregate_prob_graph(graph, item, num_windows, min_freq):
     """ 
@@ -76,6 +79,7 @@ def aggregate_prob_graph(graph, item, num_windows, min_freq):
     graph[item[0]] = create_prob_graph(item[1], num_windows, min_freq)
     return graph
 
+
 def iload_id_and_graph(paths):
     """ iterative loader for name and .pkl graph
 
@@ -93,6 +97,7 @@ def iload_id_and_graph(paths):
     """
     for f in paths:
         yield int(f.split('/')[-1].rstrip('.pkl')), pickle.load(open(f, 'rb'))
+
 
 def load_joint_prob_graph(graph_dir, num_windows, min_freq,
                           shortlist=[], existing_graph={}):
@@ -123,6 +128,7 @@ def load_joint_prob_graph(graph_dir, num_windows, min_freq,
                            min_freq=min_freq), iload_id_and_graph(paths),
                    existing_graph)
     return graph
+
 
 def create_graph_with(score_func, co_occ, occ, smooth=True, shortlist=[]):
     """ create a scored graph from probability graphs
@@ -162,6 +168,7 @@ def create_graph_with(score_func, co_occ, occ, smooth=True, shortlist=[]):
     }
     return graph
 
+
 def get_total_windows(histogram_path, window_size):
     """ Calculate number of sliding windows based on document lengths
 
@@ -186,6 +193,7 @@ def get_total_windows(histogram_path, window_size):
         return histogram[:, 1].sum()
     return (histogram[:, 1] * np.maximum([1], histogram[:, 0] - (window_size - 1))).sum()
 
+
 def load_graph(path):
     """ load .pkl dictionary graph
 
@@ -200,6 +208,7 @@ def load_graph(path):
         mapping of key,value
     """
     return pickle.load(open(path, 'rb'))
+
 
 def single_count_setup(histogram_path, single_count_path,
                        window_size, min_freq):
@@ -225,3 +234,11 @@ def single_count_setup(histogram_path, single_count_path,
     single_prob = create_prob_graph(load_graph(
         single_count_path), num_windows, min_freq)
     return num_windows, single_prob
+
+
+def get_topics(indices, graph_dir, num_windows, min_freq, single_prob):
+    joint_prob = load_joint_prob_graph(graph_dir, num_windows, min_freq,
+                                       shortlist=indices)
+    g = create_graph_with(npmi, joint_prob, single_prob,
+                          smooth=True, shortlist=indices)
+    return g
