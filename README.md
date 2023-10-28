@@ -54,7 +54,7 @@ Diversity-contrained Greedy (EMNLP'22) from https://github.com/PreferredAI/ReInt
 
 PreferredAI topic-metrics (ACL'23) from https://github.com/PreferredAI/topic-metrics/
 
-PySCIPOpt(https://github.com/scipopt/PySCIPOpt/tree/master), link(https://dl.acm.org/doi/abs/10.1145/3585516) to report.
+For convenience, we include the [CVXPY](https://www.cvxpy.org/index.html) implementation that serves as an interface for [different](https://www.cvxpy.org/install/#install-with-cvxopt-and-glpk-support) solvers (Gurobi, CPLEX, etc.). For non-commercial solvers, we recommend [SCIP](https://www.scipopt.org/index.php#welcome)'s [PySCIPOpt](https://github.com/scipopt/PySCIPOpt/tree/master), [link](https://dl.acm.org/doi/abs/10.1145/3585516) to report, Apache 2.0 license.
 
 ### Citation
 
