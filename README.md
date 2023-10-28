@@ -54,6 +54,8 @@ Diversity-contrained Greedy (EMNLP'22) from https://github.com/PreferredAI/ReInt
 
 PreferredAI topic-metrics (ACL'23) from https://github.com/PreferredAI/topic-metrics/
 
+PySCIPOpt(https://github.com/scipopt/PySCIPOpt/tree/master), link(https://dl.acm.org/doi/abs/10.1145/3585516) to report.
+
 ### Citation
 
 If you had found the resources helpful, we'd appreciate a citation!
